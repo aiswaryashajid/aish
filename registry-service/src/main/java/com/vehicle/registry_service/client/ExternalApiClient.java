@@ -3,21 +3,24 @@ package com.vehicle.registry_service.client;
 
 import java.time.Duration;
 import java.util.concurrent.TimeoutException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import com.vehicle.registry_service.exception.TimeOutException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class ExternalApiClient {
 
+  private static final Logger log = LoggerFactory.getLogger(ExternalApiClient.class);
   private final WebClient webClient;
+
+  public ExternalApiClient(WebClient webClient) {
+    this.webClient = webClient;
+  }
 
   public <T> T get(String url, HttpHeaders headers, Class<T> responseType) {
 

@@ -1,5 +1,7 @@
 package com.vehicle.registry_service.client;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
@@ -9,16 +11,17 @@ import com.vehicle.registry_service.exception.ClientErrorException;
 import com.vehicle.registry_service.exception.InternalAuthException;
 import com.vehicle.registry_service.exception.ServiceDownException;
 import com.vehicle.registry_service.exception.TimeOutException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class SecurityClient {
 
+  private static final Logger log = LoggerFactory.getLogger(SecurityClient.class);
   private static final String URL = "http://localhost:8088/v1/public/auth/validate";
   private final ExternalApiClient externalApiClient;
+
+  public SecurityClient(ExternalApiClient externalApiClient) {
+    this.externalApiClient = externalApiClient;
+  }
 
   public TokenValidationResponseDto validateToken(String authHeader) {
 

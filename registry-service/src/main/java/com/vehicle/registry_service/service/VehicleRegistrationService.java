@@ -1,6 +1,8 @@
 package com.vehicle.registry_service.service;
 
 import java.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,15 +17,17 @@ import com.vehicle.registry_service.dto.VehicleUpdateRequest;
 import com.vehicle.registry_service.entity.Vehicle;
 import com.vehicle.registry_service.exception.DataNotFoundException;
 import com.vehicle.registry_service.exception.DuplicateDataException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class VehicleRegistrationService {
 
+  private static final Logger log = LoggerFactory.getLogger(VehicleRegistrationService.class);
+
   private final VehicleRegistrationRepository repository;
+
+  public VehicleRegistrationService(VehicleRegistrationRepository repository) {
+    this.repository = repository;
+  }
 
 
 

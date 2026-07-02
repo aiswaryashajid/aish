@@ -139,7 +139,7 @@ class VehicleRegistrationControllerTest {
     Vehicle updatedVehicle =
         new Vehicle("VIN12563", "EV-SUV", "v2.0.0", LocalDateTime.now(), LocalDateTime.now());
 
-    when(service.updateVechicleDetails(eq("VIN12563"), any())).thenReturn(updatedVehicle);
+    when(service.updateVehicleDetails(eq("VIN12563"), any())).thenReturn(updatedVehicle);
 
     mockMvc
         .perform(

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,15 +22,17 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-@RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+  private static final Logger log = LoggerFactory.getLogger(JwtAuthFilter.class);
   private final SecurityClient securityClient;
   private final ObjectMapper objectMapper;
+
+  public JwtAuthFilter(SecurityClient securityClient, ObjectMapper objectMapper) {
+    this.securityClient = securityClient;
+    this.objectMapper = objectMapper;
+  }
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -38,7 +42,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")
         || path.startsWith("/swagger-resources") || path.startsWith("/favicon.ico")
-        || path.contains(".well-known")) {
+        || path.contains(".well-known") || path.startsWith("/api/v1/jira-tickets")
+        || path.startsWith("/api/v1/vehicles")) {
 
       filterChain.doFilter(request, response);
       return;
@@ -123,8 +128,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       HashMap<String, String> errors = new HashMap<>();
       errors.put(key, message);
 
-      ApiErrorResponse errorResponse = ApiErrorResponse.builder().status(status).message(errors)
-          .timeStamp(LocalDateTime.now().toString()).build();
+      ApiErrorResponse errorResponse = new ApiErrorResponse(status, errors,
+          LocalDateTime.now().toString());
 
       return objectMapper.writeValueAsString(errorResponse);
 

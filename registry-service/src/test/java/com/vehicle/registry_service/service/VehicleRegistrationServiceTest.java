@@ -96,7 +96,7 @@ class VehicleRegistrationServiceTest {
     when(repository.findById("VIN12345")).thenReturn(Optional.of(vehicle));
     when(repository.save(any())).thenReturn(vehicle);
 
-    Vehicle updated = service.updateVechicleDetails("VIN12345", request);
+    Vehicle updated = service.updateVehicleDetails("VIN12345", request);
 
     assertThat(updated.getModel()).isEqualTo("EV-SEDAN_new");
     assertThat(updated.getEcuVersion()).isEqualTo("V2.0.2");
@@ -109,7 +109,7 @@ class VehicleRegistrationServiceTest {
 
     when(repository.findById("VIN00404")).thenReturn(Optional.empty());
 
-    assertThatThrownBy(() -> service.updateVechicleDetails("VIN00404", request))
+    assertThatThrownBy(() -> service.updateVehicleDetails("VIN00404", request))
         .isInstanceOf(DataNotFoundException.class);
 
     verify(repository, never()).save(any());
